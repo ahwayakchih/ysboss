@@ -46,11 +46,12 @@
 &lt;/xsl:template&gt;<br /><br />
 &lt;xsl:template match="result"&gt;<br />
 &lt;li&gt;&lt;dl&gt;<br />
-&lt;dt&gt;&lt;a href="{url}" target="_blank"&gt;&lt;xsl:value-of select="title" disable-output-escaping="yes"/&gt;&lt;/a&gt;&lt;/dt&gt;<br />
+&lt;dt&gt;&lt;a href="{clickurl}" target="_blank"&gt;&lt;xsl:value-of select="title" disable-output-escaping="yes"/&gt;&lt;/a&gt;&lt;/dt&gt;<br />
 &lt;dd&gt;&lt;xsl:value-of select="abstract" disable-output-escaping="yes"/&gt;&lt;/dd&gt;<br />
 &lt;/dl&gt;&lt;/li&gt;<br />
 &lt;/xsl:template&gt;<br />
 			</code></p>
+			<p><b>NOTE:</b> There is a requirement to include the clickurl in anchor link of your search results.</p>
 			<p>That will allow users to enter search query, click "Search" button and get results, just like on <a href="http://yahoo.com">Yahoo.com</a> page.</p>
 END;
 			$fieldset->appendChild(new XMLElement('div', $content));
