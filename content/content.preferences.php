@@ -100,7 +100,7 @@ END;
 			$fieldset->appendChild($label);
 
 			$label = Widget::Label('Sites');
-			$label->appendChild(new XMLElement('i', 'Optionally you can restrict search results to a list of comma separated sites'));
+			$label->appendChild(new XMLElement('i', 'Optionally restrict search results to a list of comma separated sites, e.g., "abc.com,cnn.com"'));
 			$label->appendChild(Widget::Input('fields[sites]', $this->_Parent->Configuration->get('sites', 'ysboss')));
 			$fieldset->appendChild($label);
 
