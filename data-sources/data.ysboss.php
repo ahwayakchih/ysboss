@@ -100,6 +100,8 @@
 			if (!$page || $page < 0) $page = 0;
 			$p .= '&start='.($page*$count).'&count='.$count;
 
+			if (trim($temp = $settings['ysboss']['sites'])) $p .= '&sites='.urlencode($temp);
+
 			if ($settings['ysboss']['lang'] && $settings['ysboss']['lang'] != 'Disabled') {
 				$p .= '&region='.$this->languages[$settings['ysboss']['lang']][0];
 				$p .= '&lang='.$this->languages[$settings['ysboss']['lang']][1];

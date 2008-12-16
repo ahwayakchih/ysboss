@@ -68,40 +68,46 @@ END;
 			$fieldset->appendChild($p);
 
 			$div = new XMLElement('div');
-			$div->setAttribute('class', 'group');
+			$div->setAttribute('class', 'triple group');
 
 			$label = Widget::Label('Query parameter name');
-			$label->appendChild(new XMLElement('i', 'Required. Defaults to "q".'));
+			$label->appendChild(new XMLElement('i', 'Default is "q"'));
 			if (!($temp = $this->_Parent->Configuration->get('qname', 'ysboss'))) $temp = 'q';
 			$label->appendChild(Widget::Input('fields[qname]', $temp));
 			$div->appendChild($label);
 
 			$label = Widget::Label('Page number parameter name');
-			$label->appendChild(new XMLElement('i', 'Required. Defaults to "p".'));
+			$label->appendChild(new XMLElement('i', 'Default is "p"'));
 			if (!($temp = $this->_Parent->Configuration->get('pname', 'ysboss'))) $temp = 'p';
 			$label->appendChild(Widget::Input('fields[pname]', $temp));
 			$div->appendChild($label);
 
-			$fieldset->appendChild($div);
-
-			$label = Widget::Label('Number of results per page');
+			$label = Widget::Label('No. of results per page');
+			$label->appendChild(new XMLElement('i', 'Default is 10'));
 			$temp = $this->_Parent->Configuration->get('count', 'ysboss');
 			$options = array();
 			for ($i = 1; $i <= 50; $i++) {
 				$options[] = array($i, ($temp == $i), $i.($i > 1 ? ' results' : ' result'));
 			}
 			$label->appendChild(Widget::Select('fields[count]', $options));
-			$fieldset->appendChild($label);
+			$div->appendChild($label);
+
+			$fieldset->appendChild($div);
 
 			$label = Widget::Label('BOSS Application ID');
-			$label->appendChild(new XMLElement('i', 'This required argument supplies your <a href="http://developer.yahoo.com/search/boss/boss_guide/boss_appid.html">BOSS APPID</a>'));
+			$label->appendChild(new XMLElement('i', 'This required argument supplies your <a href="https://developer.yahoo.com/wsregapp/">BOSS APPID</a>'));
 			$label->appendChild(Widget::Input('fields[appid]', $this->_Parent->Configuration->get('appid', 'ysboss')));
+			$fieldset->appendChild($label);
+
+			$label = Widget::Label('Sites');
+			$label->appendChild(new XMLElement('i', 'Optionally you can restrict search results to a list of comma separated sites'));
+			$label->appendChild(Widget::Input('fields[sites]', $this->_Parent->Configuration->get('sites', 'ysboss')));
 			$fieldset->appendChild($label);
 
 			$div = new XMLElement('div');
 			$div->setAttribute('class', 'group');
 
-			$label = Widget::Label('Restrict language and region');
+			$label = Widget::Label('Language and region');
 			$label->appendChild(new XMLElement('i', 'Search data in selected language'));
 			$options = array();
 			$temp = $this->_Parent->Configuration->get('lang', 'ysboss');
@@ -151,6 +157,8 @@ END;
 			}
 
 			$this->_Parent->Configuration->set('appid', trim($fields['appid']), 'ysboss');
+
+			$this->_Parent->Configuration->set('sites', trim($fields['sites']), 'ysboss');
 
 			if (in_array($fields['lang'], $this->languages)) $this->_Parent->Configuration->set('lang', trim($fields['lang']), 'ysboss');
 
