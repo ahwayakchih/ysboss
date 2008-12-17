@@ -69,7 +69,7 @@ END;
 
 			$label = Widget::Label('Search for');
 			$label->appendChild(new XMLElement('i', 'Default is "$q:$url-q"'));
-			if (!($temp = $this->_Parent->Configuration->get('qname', 'ysboss'))) $temp = 'q';
+			if (!($temp = $this->_Parent->Configuration->get('qname', 'ysboss'))) $temp = '$q:$url-q';
 			$label->appendChild(Widget::Input('fields[qname]', $temp));
 			$div->appendChild($label);
 

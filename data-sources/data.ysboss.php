@@ -13,9 +13,9 @@
 			$this->dsParamFILTERS = array(
 				'ysboss-a' => '{'.$settings['ysboss']['appid'].'}',
 				'ysboss-q' => '{'.($settings['ysboss']['ysboss'] ? $settings['ysboss']['qname'] : '$q:$url-q').'}',
-				'ysboss-p' => '{'.($settings['ysboss']['ysboss'] ? $settings['ysboss']['pname'] : '$p:$url-p').'}',
-				'ysboss-s' => '{'.$settings['ysboss']['sites'].'}',
+				'ysboss-p' => '{'.($settings['ysboss']['ysboss'] ? $settings['ysboss']['pname'] : '$p:$url-p').'}'
 			);
+			if (($temp = $settings['ysboss']['sites'])) $this->dsParamFILTERS['ysboss-s'] = '{'.$settings['ysboss']['sites'].'}';
 
 			$this->languages = $this->languages = libYSBOSSLanguages::getList();
 
