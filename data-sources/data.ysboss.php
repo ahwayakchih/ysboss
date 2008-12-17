@@ -11,11 +11,12 @@
 			global $settings;
 
 			$this->dsParamFILTERS = array(
-				'ysboss-a' => '{'.$settings['ysboss']['appid'].'}',
-				'ysboss-q' => '{'.($settings['ysboss']['ysboss'] ? $settings['ysboss']['qname'] : '$q:$url-q').'}',
-				'ysboss-p' => '{'.($settings['ysboss']['ysboss'] ? $settings['ysboss']['pname'] : '$p:$url-p').'}'
+				'ysboss-a' => $settings['ysboss']['appid'],
+				'ysboss-q' => ($settings['ysboss']['qname'] ? $settings['ysboss']['qname'] : '{$q:$url-q}'),
+				'ysboss-p' => ($settings['ysboss']['pname'] ? $settings['ysboss']['pname'] : '{$p:$url-p}'),
+				'ysboss-c' => ($settings['ysboss']['count'] ? $settings['ysboss']['count'] : '10'),
 			);
-			if (($temp = $settings['ysboss']['sites'])) $this->dsParamFILTERS['ysboss-s'] = '{'.$settings['ysboss']['sites'].'}';
+			if (($temp = $settings['ysboss']['sites'])) $this->dsParamFILTERS['ysboss-s'] = $settings['ysboss']['sites'];
 
 			$this->languages = $this->languages = libYSBOSSLanguages::getList();
 
@@ -83,7 +84,7 @@
 			$p = '?format=xml';
 			$p .= '&appid='.urlencode($this->dsParamFILTERS['ysboss-a']);
 
-			$count = ($settings['ysboss']['count'] ? $settings['ysboss']['count'] : 10);
+			$count = $this->dsParamFILTERS['ysboss-c'];
 			if (!$count) $count = 10;
 			else if ($count < 1) $count = 1;
 			else if ($count > 50) $count = 50;

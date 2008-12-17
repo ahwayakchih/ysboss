@@ -62,14 +62,14 @@ END;
 			$fieldset = new XMLElement('fieldset');
 			$fieldset->setAttribute('class', 'settings');
 			$fieldset->appendChild(new XMLElement('legend', 'Essentials'));
-			$fieldset->appendChild(new XMLElement('p', 'Use <code> $param </code> syntax to filter by page parameters.', array('class' => 'help')));
+			$fieldset->appendChild(new XMLElement('p', 'Use <code>{$param}</code> syntax to filter by page parameters.', array('class' => 'help')));
 
 			$div = new XMLElement('div');
 			$div->setAttribute('class', 'group');
 
 			$label = Widget::Label('Search for');
-			$label->appendChild(new XMLElement('i', 'Default is "$q:$url-q"'));
-			if (!($temp = $this->_Parent->Configuration->get('qname', 'ysboss'))) $temp = '$q:$url-q';
+			$label->appendChild(new XMLElement('i', 'Default is "{$q:$url-q}"'));
+			if (!($temp = $this->_Parent->Configuration->get('qname', 'ysboss'))) $temp = '{$q:$url-q}';
 			$label->appendChild(Widget::Input('fields[qname]', $temp));
 			$div->appendChild($label);
 
@@ -85,7 +85,7 @@ END;
 			$fieldset = new XMLElement('fieldset');
 			$fieldset->setAttribute('class', 'settings');
 			$fieldset->appendChild(new XMLElement('legend', 'Filter results'));
-			$fieldset->appendChild(new XMLElement('p', 'Use <code> $param </code> syntax to filter by page parameters.', array('class' => 'help')));
+			$fieldset->appendChild(new XMLElement('p', 'Use <code>{$param}</code> syntax to filter by page parameters.', array('class' => 'help')));
 
 			$label = Widget::Label('Sites');
 			$label->appendChild(new XMLElement('i', 'Optionally restrict search results to a list of comma separated sites, e.g., "abc.com,cnn.com"'));
@@ -122,7 +122,7 @@ END;
 			$fieldset = new XMLElement('fieldset');
 			$fieldset->setAttribute('class', 'settings');
 			$fieldset->appendChild(new XMLElement('legend', 'Limiting'));
-			$fieldset->appendChild(new XMLElement('p', 'Use <code> $param </code> syntax to filter by page parameters.', array('class' => 'help')));
+			$fieldset->appendChild(new XMLElement('p', 'Use <code>{$param}</code> syntax to filter by page parameters.', array('class' => 'help')));
 
 			$div = new XMLElement('div');
 			$div->setAttribute('class', 'group');
@@ -130,11 +130,10 @@ END;
 			$label = Widget::Label();
 			$input = Widget::Input('fields[count]', $this->_Parent->Configuration->get('count', 'ysboss'), NULL, array('size' => 6));
 			$label->setValue('Show maximum of ' . $input->generate(false) . ' results');
-			if(isset($this->_errors['count'])) $div->appendChild(Widget::wrapFormElementWithError($label, $this->_errors['count']));
-			else $div->appendChild($label);
+			$div->appendChild($label);
 
 			$label = Widget::Label();
-			if (!($temp = $this->_Parent->Configuration->get('pname', 'ysboss'))) $temp = '$p:$url-p';
+			if (!($temp = $this->_Parent->Configuration->get('pname', 'ysboss'))) $temp = '{$p:$url-p}';
 			$input = Widget::Input('fields[pname]', $temp, NULL, array('size' => 6));
 			$label->setValue('Show page ' . $input->generate(false) . ' of results');
 			$div->appendChild($label);
@@ -155,11 +154,6 @@ END;
 
 		function save() {
 			$fields = $_POST['fields'];
-
-			if ($fields['count']{0} != '$') {
-				$temp = intval($fields['count']);
-				if ($temp < 1 || $temp > 50) $this->_errors['count'] = 'Must be a valid number (1-50) or parameter';
-			}
 
 			if (!trim($fields['appid'])) $this->_errors['appid'] = 'Application ID is required';
 
