@@ -62,7 +62,7 @@ END;
 			$fieldset = new XMLElement('fieldset');
 			$fieldset->setAttribute('class', 'settings');
 			$fieldset->appendChild(new XMLElement('legend', 'Essentials'));
-			$fieldset->appendChild(new XMLElement('p', 'Use <code>{$param}</code> syntax to filter by page parameters.', array('class' => 'help')));
+			$fieldset->appendChild(new XMLElement('p', 'Use <code>{$param}</code> syntax to search by page parameters.', array('class' => 'help')));
 
 			$div = new XMLElement('div');
 			$div->setAttribute('class', 'group');
@@ -122,7 +122,7 @@ END;
 			$fieldset = new XMLElement('fieldset');
 			$fieldset->setAttribute('class', 'settings');
 			$fieldset->appendChild(new XMLElement('legend', 'Limiting'));
-			$fieldset->appendChild(new XMLElement('p', 'Use <code>{$param}</code> syntax to filter by page parameters.', array('class' => 'help')));
+			$fieldset->appendChild(new XMLElement('p', 'Use <code>{$param}</code> syntax to limit by page parameters.', array('class' => 'help')));
 
 			$div = new XMLElement('div');
 			$div->setAttribute('class', 'group');
