@@ -12,9 +12,9 @@ a.help {
 
 p.help a.ysboss {
 	display: block;
+	width: 63px;
+	padding-top: 22px;
 	background-image: url('images/boss_logo.png');
 	background-repeat: no-repeat;
 	background-position: top left;
-	padding-top: 22px;
-	padding-left: 2px;
 }

@@ -30,10 +30,11 @@
 			$fieldset->setAttribute('class', 'settings');
 			$fieldset->setAttribute('id', 'help');
 			$fieldset->appendChild(new XMLElement('legend', 'Information'));
+			$fieldset->appendChild(new XMLElement('p', '<a href="http://developer.yahoo.com/search/boss/boss_guide/" title="Read Yahoo! Search BOSS documentation" class="ysboss">Documentation</a>', array('class' => 'help')));
 			$content = <<<END
 			<p>With <a href="http://developer.yahoo.com/search/boss/" title="Read more">Yahoo! Search BOSS</a> you can add search functionality to your Symphony orchestrated site.</p>
-			<p>To do that you have to add "Yahoo! Search BOSS" data source to page where you want to get results. Data source needs "q" parameter, which you can pass through URL schema or GET/POST variables. It also handles "p" parameter which tells it which page of search results it should provide.</p>
-			<p>For example you can put this in XSLT source of page:</p>
+			<p>To do that you have to add "Yahoo! Search BOSS" data source to page where you want to get results. Data source needs query parameter, which you can pass through URL schema or GET variables. It also handles page parameter which tells it which page of search results it should provide.</p>
+			<p>For example, after configuring URL Parameters of page to "q/p" and using default settings on YSBOSS page, you can put this in XSLT source of page:</p>
 			<p><code>
 &lt;xsl:template match="data"&gt;<br />
 &lt;form action="{\$root}/{\$current-page}" method="GET"&gt;<br />
@@ -61,43 +62,30 @@ END;
 			$fieldset = new XMLElement('fieldset');
 			$fieldset->setAttribute('class', 'settings');
 			$fieldset->appendChild(new XMLElement('legend', 'Essentials'));
-
-			$p = new XMLElement('p');
-			$p->setAttribute('class', 'help');
-			$p->appendChild(Widget::Anchor('Yahoo!', 'http://developer.yahoo.com/search/boss/boss_guide/', 'Read Yahoo! Search BOSS documentation', 'ysboss'));
-			$fieldset->appendChild($p);
+			$fieldset->appendChild(new XMLElement('p', 'Use <code> $param </code> syntax to filter by page parameters.', array('class' => 'help')));
 
 			$div = new XMLElement('div');
-			$div->setAttribute('class', 'triple group');
+			$div->setAttribute('class', 'group');
 
-			$label = Widget::Label('Query parameter name');
-			$label->appendChild(new XMLElement('i', 'Default is "q"'));
+			$label = Widget::Label('Search for');
+			$label->appendChild(new XMLElement('i', 'Default is "$q:$url-q"'));
 			if (!($temp = $this->_Parent->Configuration->get('qname', 'ysboss'))) $temp = 'q';
 			$label->appendChild(Widget::Input('fields[qname]', $temp));
 			$div->appendChild($label);
 
-			$label = Widget::Label('Page number parameter name');
-			$label->appendChild(new XMLElement('i', 'Default is "p"'));
-			if (!($temp = $this->_Parent->Configuration->get('pname', 'ysboss'))) $temp = 'p';
-			$label->appendChild(Widget::Input('fields[pname]', $temp));
-			$div->appendChild($label);
-
-			$label = Widget::Label('No. of results per page');
-			$label->appendChild(new XMLElement('i', 'Default is 10'));
-			$temp = $this->_Parent->Configuration->get('count', 'ysboss');
-			$options = array();
-			for ($i = 1; $i <= 50; $i++) {
-				$options[] = array($i, ($temp == $i), $i.($i > 1 ? ' results' : ' result'));
-			}
-			$label->appendChild(Widget::Select('fields[count]', $options));
-			$div->appendChild($label);
-
-			$fieldset->appendChild($div);
-
 			$label = Widget::Label('BOSS Application ID');
 			$label->appendChild(new XMLElement('i', 'This required argument supplies your <a href="https://developer.yahoo.com/wsregapp/">BOSS APPID</a>'));
 			$label->appendChild(Widget::Input('fields[appid]', $this->_Parent->Configuration->get('appid', 'ysboss')));
-			$fieldset->appendChild($label);
+			if(isset($this->_errors['appid'])) $div->appendChild(Widget::wrapFormElementWithError($label, $this->_errors['appid']));
+			else $div->appendChild($label);
+
+			$fieldset->appendChild($div);
+			$this->Form->appendChild($fieldset);
+
+			$fieldset = new XMLElement('fieldset');
+			$fieldset->setAttribute('class', 'settings');
+			$fieldset->appendChild(new XMLElement('legend', 'Filter results'));
+			$fieldset->appendChild(new XMLElement('p', 'Use <code> $param </code> syntax to filter by page parameters.', array('class' => 'help')));
 
 			$label = Widget::Label('Sites');
 			$label->appendChild(new XMLElement('i', 'Optionally restrict search results to a list of comma separated sites, e.g., "abc.com,cnn.com"'));
@@ -129,7 +117,29 @@ END;
 			$div->appendChild($label);
 
 			$fieldset->appendChild($div);
+			$this->Form->appendChild($fieldset);
 
+			$fieldset = new XMLElement('fieldset');
+			$fieldset->setAttribute('class', 'settings');
+			$fieldset->appendChild(new XMLElement('legend', 'Limiting'));
+			$fieldset->appendChild(new XMLElement('p', 'Use <code> $param </code> syntax to filter by page parameters.', array('class' => 'help')));
+
+			$div = new XMLElement('div');
+			$div->setAttribute('class', 'group');
+
+			$label = Widget::Label();
+			$input = Widget::Input('fields[count]', $this->_Parent->Configuration->get('count', 'ysboss'), NULL, array('size' => 6));
+			$label->setValue('Show maximum of ' . $input->generate(false) . ' results');
+			if(isset($this->_errors['count'])) $div->appendChild(Widget::wrapFormElementWithError($label, $this->_errors['count']));
+			else $div->appendChild($label);
+
+			$label = Widget::Label();
+			if (!($temp = $this->_Parent->Configuration->get('pname', 'ysboss'))) $temp = '$p:$url-p';
+			$input = Widget::Input('fields[pname]', $temp, NULL, array('size' => 6));
+			$label->setValue('Show page ' . $input->generate(false) . ' of results');
+			$div->appendChild($label);
+
+			$fieldset->appendChild($div);
 			$this->Form->appendChild($fieldset);
 
 			$div = new XMLElement('div');
@@ -146,15 +156,19 @@ END;
 		function save() {
 			$fields = $_POST['fields'];
 
-			if ($temp = preg_replace('/[^a-zA-Z]/', '', $fields['qname'])) $this->_Parent->Configuration->set('qname', $temp, 'ysboss');
-			else $this->_Parent->Configuration->set('qname', 'q', 'ysboss');
-
-			if ($temp = preg_replace('/[^a-zA-Z]/', '', $fields['pname'])) $this->_Parent->Configuration->set('pname', $temp, 'ysboss');
-			else $this->_Parent->Configuration->set('pname', 'p', 'ysboss');
-
-			if (($temp = intval($fields['count'])) > 0 &&  $temp < 51) {
-				$this->_Parent->Configuration->set('count', $temp, 'ysboss');
+			if ($fields['count']{0} != '$') {
+				$temp = intval($fields['count']);
+				if ($temp < 1 || $temp > 50) $this->_errors['count'] = 'Must be a valid number (1-50) or parameter';
 			}
+
+			if (!trim($fields['appid'])) $this->_errors['appid'] = 'Application ID is required';
+
+			if(!empty($this->_errors)) return false;
+
+			$this->_Parent->Configuration->set('qname', $fields['qname'], 'ysboss');
+			$this->_Parent->Configuration->set('pname', $fields['pname'], 'ysboss');
+
+			$this->_Parent->Configuration->set('count', $temp, 'ysboss');
 
 			$this->_Parent->Configuration->set('appid', trim($fields['appid']), 'ysboss');
 
