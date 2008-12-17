@@ -32,6 +32,7 @@
 		}
 
 		function update(){
+			$about = $this->about();
 			$lastVersion = floatval($this->_Parent->Configuration->get('version', 'ysboss'));
 			if (!$lastVersion || $lastVersion < 1.1) {
 				if (!($temp = $this->_Parent->Configuration->get('qname', 'ysboss'))) $temp = 'q';
@@ -40,6 +41,8 @@
 				if (!($temp = $this->_Parent->Configuration->get('pname', 'ysboss'))) $temp = 'p';
 				$this->_Parent->Configuration->set('pname', '$'.$temp.':$url-'.$temp, 'ysboss');
 			}
+
+			$this->_Parent->Configuration->set('version', $about['version'], 'ysboss');
 		}
 
 		public function fetchNavigation() {
