@@ -123,7 +123,7 @@
 
 			$ch = curl_init();
 			if (!$ch) {
-				$error = new XMLElement('error', 'Cannot initialize CURL object.');
+				$error = new XMLElement('error', 'Cannot initialize cURL object.');
 				$xml->appendChild($error);
 				return $xml;
 			}
@@ -148,7 +148,7 @@
 				if (preg_match('/responsecode="([^"]+)"/i', $response[0], $code)) {
 					$data->setAttribute('responsecode', $code[1]);
 
-					if (preg_match('/\<resultset_web count="(\d+)" start="(\d+)" totalhits="(\d+)" deephits="(\d+)"/i', $body, $numbers)) {
+					if ($code[1] == '200' && preg_match('/\<resultset_web count="(\d+)" start="(\d+)" totalhits="(\d+)" deephits="(\d+)"/i', $body, $numbers)) {
 						$pagination = new XMLElement('pagination-info');
 						$pagination->setAttribute('total-entries', $numbers[3]);
 						$pagination->setAttribute('total-pages', ceil($numbers[3] / $count));
