@@ -162,7 +162,7 @@ END;
 			$this->_Parent->Configuration->set('qname', $fields['qname'], 'ysboss');
 			$this->_Parent->Configuration->set('pname', $fields['pname'], 'ysboss');
 
-			$this->_Parent->Configuration->set('count', $temp, 'ysboss');
+			$this->_Parent->Configuration->set('count', $fields['count'], 'ysboss');
 
 			$this->_Parent->Configuration->set('appid', trim($fields['appid']), 'ysboss');
 
