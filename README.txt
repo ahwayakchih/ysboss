@@ -2,9 +2,9 @@
 Data source: Yahoo! Search BOSS
 ------------------------------------
 
-Version: 1.0
+Version: 1.2
 Author: Marcin Konicki (http://ahwayakchih.neoni.net)
-Build Date: 16 December 2008
+Build Date: 18 December 2008
 Requirements: Symphony version 2.0 or later.
 
 

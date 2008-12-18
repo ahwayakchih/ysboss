@@ -1,6 +1,5 @@
-All source code included in the "Google Custom Search Engine" Symphony Extension 
-archive is, unless otherwise specified, released under the MIT licence as 
-follows:
+All source code included in the "Yahoo! Search BOSS" Symphony Extension 
+archive is, unless otherwise specified, released under the following license:
 
 ----- begin license block -----
 
@@ -25,3 +24,6 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 ----- end license block -----
+
+"Yahoo! Search BOSS" logo (assets/boss_logo.png) is:
+Copyright © 2008 Yahoo! Inc. All rights reserved.
