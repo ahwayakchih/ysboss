@@ -32,9 +32,6 @@
 		}
 
 		function update($previousVersion=false){
-			$about = $this->about();
-			$newVersion = floatval($about['version']);
-
 			$needSave = true;
 			switch (floatval($previousVersion)) {
 				case false:

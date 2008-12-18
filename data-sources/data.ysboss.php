@@ -3,24 +3,30 @@
 
 	Class datasourceYSBOSS extends Datasource{
 		public $dsParamFILTERS = array(
-			'ysboss-q' => '{$q:$url-q}',
-			'ysboss-p' => '{$p:$url-p}'
+			'query' => '{$q:$url-q}',
+			'page' => '{$p:$url-p}'
 		);
 
 		function __construct(&$parent, $env=NULL, $process_params=true){
-			global $settings;
-
-			$this->dsParamFILTERS = array(
-				'ysboss-a' => $settings['ysboss']['appid'],
-				'ysboss-q' => ($settings['ysboss']['qname'] ? $settings['ysboss']['qname'] : '{$q:$url-q}'),
-				'ysboss-p' => ($settings['ysboss']['pname'] ? $settings['ysboss']['pname'] : '{$p:$url-p}'),
-				'ysboss-c' => ($settings['ysboss']['count'] ? $settings['ysboss']['count'] : '10'),
-			);
-			if (($temp = $settings['ysboss']['sites'])) $this->dsParamFILTERS['ysboss-s'] = $settings['ysboss']['sites'];
-
 			$this->languages = $this->languages = libYSBOSSLanguages::getList();
 
+			$this->dsParamFILTERS = $this->__getParamFilters();
+
 			parent::__construct($parent, $env, $process_params);
+		}
+
+		function __getParamFilters() {
+			global $settings;
+
+			$result = array(
+				'appid' => $settings['ysboss']['appid'],
+				'query' => ($settings['ysboss']['qname'] ? $settings['ysboss']['qname'] : '{$q:$url-q}'),
+				'page' => ($settings['ysboss']['pname'] ? $settings['ysboss']['pname'] : '{$p:$url-p}'),
+				'count' => ($settings['ysboss']['count'] ? $settings['ysboss']['count'] : '10'),
+			);
+			if (($temp = $settings['ysboss']['sites'])) $result['sites'] = $settings['ysboss']['sites'];
+
+			return $result;
 		}
 
 		function example(){
@@ -63,6 +69,10 @@
 		}
 
 		function about(){
+			$params = array();
+			foreach (datasourceYSBOSS::__getParamFilters() as $k => $v) {
+				if (strpos($v, '{$') !== false) $params[] = $v.' // '.$k;
+			}
 			return array(
 				"name" => "Yahoo! Search BOSS",
 				"description" => "Calls Yahoo! Search BOSS API and returns results in XML.",
@@ -71,30 +81,30 @@
 					"email" => "ahwayakchih@neoni.net"),
 				"version" => "1.2",
 				"release-date" => "2008-12-18",
-				"recognised-url-param" => array('ysboss-q', 'ysboss-p'),
+				"recognised-url-param" => $params,
 			);
 		}
 
 		function grab($param=array()){
 			global $settings;
 
-			$q = trim($this->dsParamFILTERS['ysboss-q']);
+			$q = trim($this->dsParamFILTERS['query']);
 			if (!$q) return NULL;
 
 			$p = '?format=xml';
-			$p .= '&appid='.urlencode($this->dsParamFILTERS['ysboss-a']);
+			$p .= '&appid='.urlencode($this->dsParamFILTERS['appid']);
 
-			$count = $this->dsParamFILTERS['ysboss-c'];
+			$count = $this->dsParamFILTERS['count'];
 			if (!$count) $count = 10;
 			else if ($count < 1) $count = 1;
 			else if ($count > 50) $count = 50;
 
-			$page = intval($this->dsParamFILTERS['ysboss-p']);
+			$page = intval($this->dsParamFILTERS['page']);
 			$page -= 1; // Pagination counts from 1, not 0
 			if (!$page || $page < 0) $page = 0;
 			$p .= '&start='.($page*$count).'&count='.$count;
 
-			if (trim($temp = $this->dsParamFILTERS['ysboss-s'])) $p .= '&sites='.urlencode($temp);
+			if (trim($temp = $this->dsParamFILTERS['sites'])) $p .= '&sites='.urlencode($temp);
 
 			if ($settings['ysboss']['lang'] && $settings['ysboss']['lang'] != 'Disabled') {
 				$p .= '&region='.$this->languages[$settings['ysboss']['lang']][0];
