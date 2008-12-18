@@ -69,8 +69,8 @@
 				"author" => array("name" => "Marcin Konicki",
 					"website" => "http://ahwayakchih.neoni.net",
 					"email" => "ahwayakchih@neoni.net"),
-				"version" => "1.1",
-				"release-date" => "2008-12-17",
+				"version" => "1.2",
+				"release-date" => "2008-12-18",
 				"recognised-url-param" => array('ysboss-q', 'ysboss-p'),
 			);
 		}

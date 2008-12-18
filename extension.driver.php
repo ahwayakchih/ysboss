@@ -3,8 +3,8 @@
 	
 		public function about(){
 			return array('name' => 'Yahoo! Search BOSS',
-						 'version' => '1.1',
-						 'release-date' => '2008-12-17',
+						 'version' => '1.2',
+						 'release-date' => '2008-12-18',
 						 'author' => array('name' => 'Marcin Konicki',
 										   'website' => 'http://ahwayakchih.neoni.net',
 										   'email' => 'ahwayakchih@neoni.net'),
@@ -31,18 +31,31 @@
 			return true;
 		}
 
-		function update(){
+		function update($previousVersion=false){
 			$about = $this->about();
-			$lastVersion = floatval($this->_Parent->Configuration->get('version', 'ysboss'));
-			if (!$lastVersion || $lastVersion < 1.1) {
-				if (!($temp = $this->_Parent->Configuration->get('qname', 'ysboss'))) $temp = 'q';
-				$this->_Parent->Configuration->set('qname', '$'.$temp.':$url-'.$temp, 'ysboss');
+			$newVersion = floatval($about['version']);
 
-				if (!($temp = $this->_Parent->Configuration->get('pname', 'ysboss'))) $temp = 'p';
-				$this->_Parent->Configuration->set('pname', '$'.$temp.':$url-'.$temp, 'ysboss');
+			$needSave = true;
+			switch (floatval($previousVersion)) {
+				case false:
+				case 0:
+				case 1.0:
+					if (!($temp = $this->_Parent->Configuration->get('qname', 'ysboss'))) $temp = 'q';
+					$this->_Parent->Configuration->set('qname', '$'.$temp.':$url-'.$temp, 'ysboss');
+	
+					if (!($temp = $this->_Parent->Configuration->get('pname', 'ysboss'))) $temp = 'p';
+					$this->_Parent->Configuration->set('pname', '$'.$temp.':$url-'.$temp, 'ysboss');
+
+				case 1.1:
+					$this->_Parent->Configuration->remove('version', 'ysboss');
+					break;
+
+				default:
+					$needSave = false;
+					break;
 			}
 
-			$this->_Parent->Configuration->set('version', $about['version'], 'ysboss');
+			return ($needSave ? $this->_Parent->saveConfig() : true);
 		}
 
 		public function fetchNavigation() {
