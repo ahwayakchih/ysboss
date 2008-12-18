@@ -74,7 +74,7 @@ END;
 			$div->appendChild($label);
 
 			$label = Widget::Label('BOSS Application ID');
-			$label->appendChild(new XMLElement('i', 'This required argument supplies your <a href="https://developer.yahoo.com/wsregapp/">BOSS APPID</a>'));
+			$label->appendChild(new XMLElement('i', 'Your <a href="https://developer.yahoo.com/wsregapp/">BOSS APPID</a>'));
 			$label->appendChild(Widget::Input('fields[appid]', $this->_Parent->Configuration->get('appid', 'ysboss')));
 			if(isset($this->_errors['appid'])) $div->appendChild(Widget::wrapFormElementWithError($label, $this->_errors['appid']));
 			else $div->appendChild($label);
@@ -88,7 +88,7 @@ END;
 			$fieldset->appendChild(new XMLElement('p', 'Use <code>{$param}</code> syntax to filter by page parameters.', array('class' => 'help')));
 
 			$label = Widget::Label('Sites');
-			$label->appendChild(new XMLElement('i', 'Optionally restrict search results to a list of comma separated sites, e.g., "abc.com,cnn.com"'));
+			$label->appendChild(new XMLElement('i', 'Optionally restrict search results to a list of comma separated sites, e.g., "'.DOMAIN.',cnn.com"'));
 			$label->appendChild(Widget::Input('fields[sites]', $this->_Parent->Configuration->get('sites', 'ysboss')));
 			$fieldset->appendChild($label);
 
@@ -96,7 +96,7 @@ END;
 			$div->setAttribute('class', 'group');
 
 			$label = Widget::Label('Language and region');
-			$label->appendChild(new XMLElement('i', 'Search data in selected language'));
+			//$label->appendChild(new XMLElement('i', 'Search data in selected language'));
 			$options = array();
 			$temp = $this->_Parent->Configuration->get('lang', 'ysboss');
 			foreach ($this->languages as $name => $code) {
@@ -105,8 +105,8 @@ END;
 			$label->appendChild(Widget::Select('fields[lang]', $options));
 			$div->appendChild($label);
 
-			$label = Widget::Label('Filter');
-			$label->appendChild(new XMLElement('i', 'Additional filtering of search results'));
+			$label = Widget::Label('Exclude');
+			//$label->appendChild(new XMLElement('i', 'Additional filtering of search results'));
 			$vars = array('Porn' => '-porn', 'Hate (English only)' => '-hate');
 			$options = array();
 			$temp = explode(',', $this->_Parent->Configuration->get('filters', 'ysboss'));
@@ -128,13 +128,13 @@ END;
 			$div->setAttribute('class', 'group');
 
 			$label = Widget::Label();
-			$input = Widget::Input('fields[count]', $this->_Parent->Configuration->get('count', 'ysboss'), NULL, array('size' => 6));
+			$input = Widget::Input('fields[count]', $this->_Parent->Configuration->get('count', 'ysboss'), NULL, array('size' => 10));
 			$label->setValue('Show maximum of ' . $input->generate(false) . ' results');
 			$div->appendChild($label);
 
 			$label = Widget::Label();
 			if (!($temp = $this->_Parent->Configuration->get('pname', 'ysboss'))) $temp = '{$p:$url-p}';
-			$input = Widget::Input('fields[pname]', $temp, NULL, array('size' => 6));
+			$input = Widget::Input('fields[pname]', $temp, NULL, array('size' => 10));
 			$label->setValue('Show page ' . $input->generate(false) . ' of results');
 			$div->appendChild($label);
 
