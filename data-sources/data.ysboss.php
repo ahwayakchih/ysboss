@@ -20,8 +20,8 @@
 
 			$result = array(
 				'appid' => $settings['ysboss']['appid'],
-				'query' => ($settings['ysboss']['qname'] ? '{$'.$settings['ysboss']['qname'].'}' : '{$q:$url-q}'),
-				'page' => ($settings['ysboss']['pname']  ? '{$'.$settings['ysboss']['pname'].'}' : '{$p:$url-p}'),
+				'query' => ($settings['ysboss']['qname'] ? $settings['ysboss']['qname'] : '{$q:$url-q}'),
+				'page' => ($settings['ysboss']['pname'] ? $settings['ysboss']['pname'] : '{$p:$url-p}'),
 				'count' => ($settings['ysboss']['count'] ? $settings['ysboss']['count'] : '10'),
 			);
 			if (($temp = $settings['ysboss']['sites'])) $result['sites'] = $settings['ysboss']['sites'];
