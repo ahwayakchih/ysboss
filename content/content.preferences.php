@@ -54,6 +54,7 @@
 			</code></p>
 			<p><b>NOTE:</b> There is a requirement to include the clickurl in anchor link of your search results.</p>
 			<p>That will allow users to enter search query, click "Search" button and get results, just like on <a href="http://yahoo.com">Yahoo.com</a> page.</p>
+			<p>Now all is left to do is to create <a href="http://sitemaps.org/">SiteMap</a> and ping Yahoo to download it and index Your site :).</p>
 END;
 			$fieldset->appendChild(new XMLElement('div', $content));
 			$this->Form->appendChild($fieldset);

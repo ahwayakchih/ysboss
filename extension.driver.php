@@ -61,6 +61,7 @@
 					'location'	=> 300,
 					'name'		=> 'YSBOSS',
 					'link'		=> '/preferences/',
+					'limit'		=> 'developer',
 				)
 			);
 		}
